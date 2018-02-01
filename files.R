@@ -24,3 +24,4 @@ setQualitative = function(data, names){
   }
   return(data)
 }
+
