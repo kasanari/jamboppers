@@ -12,7 +12,7 @@ songs <- read.csv('training_data.csv', header = T)
 
 training_indices <- sample(nrow(songs), size = 250, replace = FALSE)
 
-qualitative_vars = list("label","key", "time_signature")
+qualitative_vars = list("label","key", "time_signature", "mode")
 songs = setQualitative(songs, qualitative_vars)
 
 songs.train = songs[training_indices,]
@@ -20,7 +20,7 @@ songs.test = songs[-training_indices,]
 
 songs.train.scaled = scaleData(songs.train)
 
-f = label ~ key + danceability + energy + key + loudness + mode + speechiness + acousticness + instrumentalness + liveness + valence + time_signature    
+f = label ~ key + danceability + energy + loudness + mode + speechiness + acousticness + instrumentalness + liveness + valence + time_signature    
 
 log_reg.fit = glm(formula = f, data = songs.train, family = "binomial")
 log_reg.probs = predict(object = log_reg.fit, newdata = songs.test, type="response")
