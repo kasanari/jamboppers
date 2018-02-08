@@ -2,6 +2,7 @@ rm(list = ls()) #clears workspace
 
 source("files.R")
 source("log_reg.R")
+source("knn.R")
 
 set.seed(1)
 
@@ -19,6 +20,8 @@ songs.train.scaled = scaleData(songs.train)
 
 f = label ~ key + danceability + energy + loudness + mode + speechiness + acousticness + instrumentalness + liveness + valence + time_signature
 
+kNN_vars = c("key", "danceability", "energy", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "time_signature")
+
 preds = log_reg(songs.train, songs.test, f)
 
 preds.labels = preds[[1]]
@@ -26,3 +29,10 @@ preds.answers = preds[[2]]
 
 table(songs.test$label, preds.labels)
 print(mean(preds.labels == songs.test$label))
+
+
+#knn
+kNN_vars = c("key", "danceability", "energy", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "time_signature")
+knn.pred = knearest(songs.train, songs.test, kNN_vars, 10)
+table(songs.test$label, knn.pred)
+print(mean(knn.pred == songs.test$label))

@@ -1,3 +1,5 @@
+library(MASS)
+
 linearda  = function(train, test, f) {
   #Uses function lda from library(MASS) to learn a 
   #linear discriminant analysis model using data "train" and "test"
