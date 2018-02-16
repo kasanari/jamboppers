@@ -5,6 +5,8 @@ source("log_reg.R")
 source("discriminant.R")
 source("makeWebsiteString.R")
 source("knn_cross_val.R")
+install.packages("randomForest") # Vet inte om det ska finnas några package installs här/var? Vet inte om install.packages("rpart") behövs oxå? /2Lunch
+source("random_forest.R")
 
 write_to_file = function(name, title, predicts){
   txt <- makeWebsiteString(predicts)
@@ -70,7 +72,33 @@ knn.pred <- knn(train = x, test = z, cl = y, k = n.k) #Do kNN prediction
 
 write_to_file(filename,"knn:", knn.pred)
 
+
+## Random Forest
+
+## For simple testing
+# set.seed(1)
+# training_indices <- sample(nrow(songs.train), size = 400, replace = FALSE)
+# songs.training <- songs.train[training_indices,]
+# songs.testing <- songs.train[-training_indices,]
+##
+
+## This because of the/a bug in randomForest; other methods trying to assimilate levels didn't work.
+# levels(songs.classify$label) <- levels(songs.train$label) # Tried fixing randomForest bug, didn't work. Looked into another method, didn't work either.
+songs.classify <- rbind(songs.train[1, ] , songs.classify)
+songs.classify <- songs.classify[-1,]
+# Maybe nicer to put them together permanently instead. But believe still nicer but more knowledgable solution exist.
+
+f = label ~ danceability + energy + key + loudness + mode + speechiness + acousticness + instrumentalness + liveness + valence + tempo + time_signature # Duration removed - because problematic (?). But tempo stays?? Probably best removed: Definitely time_signature. Probably key and mode as well.
+rf.pred <- serendipityGrove(songs.train, songs.classify, f)
+
+## For simple testing
+# rf.pred <- serendipityGrove(songs.training, songs.testing, f)
+# rf.testing.error <- mean(songs.testing$label != rf.pred$aggregate) # Test error rate.
+# rf.testing.error
+##
+
+write_to_file(filename, "Random Forest:", rf.pred$aggregate)
+
+
 txt = "End of file"
-write(txt, file = filename, append = TRUE) 
-
-
+write(txt, file = filename, append = TRUE)
