@@ -47,6 +47,7 @@ write(txt, file=filename, append = TRUE)
 
 
 ## KNN
+library(class)
 kNN_vars = c(
   "key",
   "danceability",

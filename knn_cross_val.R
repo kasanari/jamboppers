@@ -1,3 +1,5 @@
+#Cross validation algorithm modified from lab code
+
 set.seed(1)
 
 knn_cross_val = function (data, vars, label) {
@@ -19,12 +21,12 @@ for (i in 1:N.CV)
 {
   start.index = (i - 1) * ceiling(nrow(data) / N.CV) + 1
   end.index = min(i * ceiling(nrow(data) / N.CV), nrow(data))
-  validation.indices <-
-    seq(from = start.index, to = end.index, by = 1)
+  validation.indices <- seq(from = start.index, to = end.index, by = 1)
   X.training <- X.randomized[-validation.indices, ]
   y.training <- y.randomized[-validation.indices]
   X.validation <- X.randomized[validation.indices, ]
   y.validation <- y.randomized[validation.indices]
+  
   for (kt in 1:N.K)
   {
     pred <- knn(
