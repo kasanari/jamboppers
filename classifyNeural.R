@@ -4,9 +4,8 @@ rm(list = ls()) #clears workspace
 set.seed(1)
 source("files.R")
 library(neuralnet)
-load("nn.data")
-source("neuralNetwork.R")
 
+source("neuralNetwork.R")
 
 songs.train <- read.csv('training_data.csv', header = T)
 songs.classify <- read.csv('songs_to_classify.csv', header = T)
@@ -29,36 +28,14 @@ classify.dummied = model.matrix(~., classify.scaled)
 T_labels = labels(train.dummied)[[2]]
 C_labels= labels(classify.dummied)[[2]]
 
+time_signature5 = rep(0, nrow(classify.dummied)) #Is missing from classify and is needed to make predictions
 
-'%nin%' <- Negate('%in%')
-
-labels_to_add = T_labels[T_labels %nin% C_labels]
-
-classify.dummied[[labels_to_add]] = rep(0, n)
-
-n <- labels(train.dummied)[[2]]
-learning_vars = n[!n %in% c("(Intercept)", "labellike")]
-
-weight_nn = nn[["weights"]]
-
-#f <- as.formula(paste("labellike ~", paste(learning_vars, collapse = " + ")))
-
-#nn <- neuralnet(f, data=train.dummied, hidden=c(17,10), linear.output=FALSE) #startweights = weight_nn)
+classify.dummied = cbind(classify.dummied, time_signature5)
 
 answer = neural_network(train.dummied, classify.dummied)
 
-#plot(nn)
-
-##Predictions###
-
-#t  = classify.dummied
-
-#pr.nn <- compute(nn, t)
-
-#answer = round(pr.nn[["net.result"]])
-
 txt = ""
-for (label in answer) {
+for (label in answer[[1]]) {
   txt = paste(txt, sprintf("%d", label), sep = "")
 }
 

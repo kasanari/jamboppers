@@ -3,12 +3,15 @@
 source("files.R")
 library(neuralnet)
 #load("nn.data")
-load("nn2.data")
+#load("nn2.data")
+#load("nn3.data")
+#load("nn4.data")
+#load("nn5.data")
+#load("nn6.data")
+#load("nn7.data")
+load("nn9.data")
 
 neural_network = function(train, test) {
-  ###Replace qualitative variables with dummy variables###
-  #train_m = model.matrix(~., train)
-  #test_m = model.matrix(~., test)
   
   ###Neural Network###
   n <- labels(train)[[2]]
@@ -65,4 +68,6 @@ test <- dummied[-training_indices,]
 answer = neural_network(train, test)
 
 test.error <- mean(test[,"labellike"] != answer[[1]])
+
+
 
