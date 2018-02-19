@@ -95,5 +95,10 @@ rf.pred <- serendipityGrove(songs.train, songs.classify, f)
 write_to_file(filename, "Random Forest:", rf.pred)
 
 
+
+
+
+
+
 txt = "End of file"
 write(txt, file = filename, append = TRUE)

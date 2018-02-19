@@ -1,9 +1,9 @@
-rm(list = ls()) #clears workspace
 
-set.seed(1)
+#set.seed(1)
 source("files.R")
 library(neuralnet)
-
+#load("nn.data")
+load("nn2.data")
 
 neural_network = function(train, test) {
   ###Replace qualitative variables with dummy variables###
@@ -16,9 +16,9 @@ neural_network = function(train, test) {
   
   f <- as.formula(paste("labellike ~", paste(learning_vars, collapse = " + ")))
   
-  nn <- neuralnet(f, data=train, hidden=c(17,10), linear.output=FALSE)
+  nn <- neuralnet(f, data=train, hidden=c(17,10), linear.output=FALSE, startweights = nn$weights)
   
-  plot(nn)
+  #plot(nn)
   
   ##Predictions###
   
@@ -31,18 +31,18 @@ neural_network = function(train, test) {
   answer.verbose <- rep("dislike", length(answer))
   answer.verbose[answer == 1] <- "like"
   
-  return(answer)
+  return(list(answer, nn))
 }
 
 scale_data = function(data, qualitative_vars) {
-  data_to_scale = songs[, !(names(songs) %in% qualitative_vars)]
+  data_to_scale = data[, !(names(data) %in% qualitative_vars)]
   maxs <- apply(data_to_scale, 2, max) 
   mins <- apply(data_to_scale, 2, min)
   
   scaled <- as.data.frame(scale(data_to_scale, center = mins, scale = maxs - mins))
   
   for (var in qualitative_vars) {
-    scaled[[var]] = songs[[var]]
+    scaled[[var]] = data[[var]]
   }
   return(scaled)
 }
@@ -64,5 +64,5 @@ test <- dummied[-training_indices,]
 
 answer = neural_network(train, test)
 
-test.error <- mean(test[,"labellike"] != answer)
+test.error <- mean(test[,"labellike"] != answer[[1]])
 
