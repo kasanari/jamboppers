@@ -25,3 +25,8 @@ setQualitative = function(data, names){
   return(data)
 }
 
+write_to_file = function(name, title, predicts){
+  txt <- makeWebsiteString(predicts)
+  txt = paste(title, txt)
+  write(txt, file=name, append = TRUE)
+}

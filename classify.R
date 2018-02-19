@@ -5,14 +5,8 @@ source("log_reg.R")
 source("discriminant.R")
 source("makeWebsiteString.R")
 source("knn_cross_val.R")
-install.packages("randomForest") # Vet inte om det ska finnas några package installs här/var? Vet inte om install.packages("rpart") behövs oxå? /2Lunch
+install.packages("randomForest") # Vet inte om det ska finnas n?gra package installs h?r/var? Vet inte om install.packages("rpart") beh?vs ox?? /2Lunch
 source("random_forest.R")
-
-write_to_file = function(name, title, predicts){
-  txt <- makeWebsiteString(predicts)
-  txt = paste(title, txt)
-  write(txt, file=name, append = TRUE)
-}
 
 songs.train <- read.csv('training_data.csv', header = T)
 songs.classify <- read.csv('songs_to_classify.csv', header = T)
@@ -98,7 +92,7 @@ rf.pred <- serendipityGrove(songs.train, songs.classify, f)
 # rf.testing.error
 ##
 
-write_to_file(filename, "Random Forest:", rf.pred$aggregate)
+write_to_file(filename, "Random Forest:", rf.pred)
 
 
 txt = "End of file"
