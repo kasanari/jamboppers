@@ -94,11 +94,11 @@ f = label ~ danceability + energy+ loudness + speechiness + acousticness + instr
 
 ## For simple testing
 rf.pred <- serendipityGrove(songs.training, songs.testing, f)
-rf.testing.error <- mean(songs.testing$label != rf.pred$aggregate) # Test error rate.
+rf.testing.error <- mean(songs.testing$label != rf.pred) # Test error rate.
 rf.testing.error
 ##
 
-write_to_file(filename, "Random Forest:", rf.pred$aggregate)
+write_to_file(filename, "Random Forest:", rf.pred)
 
 
 txt = "End of file"
