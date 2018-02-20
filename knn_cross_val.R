@@ -1,7 +1,5 @@
 #Cross validation algorithm modified from lab code
 
-set.seed(1)
-
 knn_cross_val = function (data, vars, label) {
 
 kNN_vars = vars
@@ -12,8 +10,7 @@ y = as.matrix(data[label])
 N.K = 30
 N.CV = 10
 
-randomize.indices <-
-  sample(nrow(data), size = nrow(data), replace = FALSE)
+randomize.indices <- sample(nrow(data), size = nrow(data), replace = FALSE)
 X.randomized <- X[randomize.indices, ]
 y.randomized <- y[randomize.indices]
 error.crossvalidation <- matrix(0, N.K, N.CV)

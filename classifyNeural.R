@@ -1,7 +1,7 @@
 rm(list = ls()) #clears workspace
 
 ##Neural network classification##
-set.seed(666)
+#set.seed(666)
 source("files.R")
 library(neuralnet)
 
@@ -30,11 +30,18 @@ names(classify) <- c(names(classify)[1:10], keys, "onefourths", "threefourths", 
 fivefourths = rep(0, nrow(classify)) #Is missing from classify and is needed to make predictions
 classify = cbind(classify, fivefourths)
 
+load("old_weights.data")
 
-answer = neural_network(train, classify)
+#answer = neural_network(train, classify)
+
+answers = matrix(nrow= 100,ncol= 100)
+for (i in 1:5) {
+  answer = neural_network(train, classify, old_weights)
+  answers[,i] = answer[[1]][,1]
+}
 
 txt = ""
-for (label in answer[[1]][,1]) {
+for (label in answers[,1]) {
   txt = paste(txt, sprintf("%d", label), sep = "")
 }
 
