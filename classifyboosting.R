@@ -21,7 +21,7 @@ qualitative_vars = list("label", "key", "mode", "time_signature")
 songs.train = setQualitative(songs.train, qualitative_vars)
 songs.classify = setQualitative(songs.classify, qualitative_vars)
 
-filename = "results.txt"
+filename = "Boosting_results.txt"
  
 txt = "Start of file"
 write(txt, file = filename) #Empty results file
@@ -101,8 +101,7 @@ write(txt, file = filename) #Empty results file
 # write_to_file(filename, "Random Forest:", rf.pred$aggregate)
 # 
 # 
-# txt = "End of file"
-# write(txt, file = filename, append = TRUE)
+# 
 
 #BOOSTING
 #installera adabag innan ni kör.
@@ -130,4 +129,7 @@ boost.fit <- boosting(formula=f,data=songs.train)
 boost.pred <- predict(boost.fit, newdata=songs.classify)
 
 write_to_file(filename,"B-b-b-boosting:", boost.pred$class)
+
+txt = "End of file"
+write(txt, file = filename, append = TRUE)
 

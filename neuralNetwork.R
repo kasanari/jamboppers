@@ -1,25 +1,22 @@
-
-#set.seed(1)
+#rm(list = ls()) #clears workspace
+set.seed(666)
 source("files.R")
 library(neuralnet)
-#load("nn.data")
-#load("nn2.data")
-#load("nn3.data")
-#load("nn4.data")
-#load("nn5.data")
-#load("nn6.data")
-#load("nn7.data")
-load("nn9.data")
+library(nnet)
+load("nn.data")
 
 neural_network = function(train, test) {
   
   ###Neural Network###
-  n <- labels(train)[[2]]
-  learning_vars = n[!n %in% c("(Intercept)", "labellike")]
+  n <- names(train)
+  learning_vars = n[!n %in% c("like", "dislike")]
+  string_learning = paste(learning_vars, collapse = " + ")
+  formel = paste("like + dislike ~", string_learning)
+  f <- as.formula(formel)
   
-  f <- as.formula(paste("labellike ~", paste(learning_vars, collapse = " + ")))
+  good = c(15, 10, 10, 2)
   
-  nn <- neuralnet(f, data=train, hidden=c(17,10), linear.output=FALSE, startweights = nn$weights)
+  nn <- neuralnet(f, data=train, hidden=good, stepmax = 1e+08, threshold = 0.1, rep=5, linear.output=FALSE, startweights = old_nn$weights)
   
   #plot(nn)
   
@@ -55,19 +52,32 @@ songs <- read.csv('training_data.csv', header = T)
 
 training_indices <- sample(nrow(songs), size = 400, replace = FALSE)
 
-qualitative_vars = c("label","key", "time_signature", "mode")
+qualitative_vars = c("key", "time_signature", "mode", "label")
 songs = setQualitative(songs, qualitative_vars)
 
 scaled = scale_data(songs, qualitative_vars)
 
-dummied = model.matrix(~., scaled)
 
-train <- dummied[training_indices,]
-test <- dummied[-training_indices,]
+classify = function(data) {
+  # Encode as a one hot vector multilabel data
+  songs.class <- cbind(data[1:10], class.ind(as.factor(data$key)), class.ind(as.factor(data$time_signature)), class.ind(as.factor(data$mode)),class.ind(as.factor(data$label)))
+  keys = c("C", "C_major", "D_minor", "D", "D_major", "E_minor", "E", "E_major", "F_minor", "F", "F_major", "G_minor")
+  # Set labels name
+  names(songs.class) <- c(names(data)[1:10], keys, "oneforuth", "threefouths", "fourfourth", "fiveforth", "minor", "major", "dislike","like")
+  return(songs.class)
+}
+
+songs.class = classify(scaled)
+
+train <- songs.class[training_indices,]
+test <- songs.class[-training_indices,]
+
 
 answer = neural_network(train, test)
 
-test.error <- mean(test[,"labellike"] != answer[[1]])
+test.error <- mean(test[c("like", "dislike")] != answer[[1]])
 
-
+save_old_nn = function(old_nn) {
+  save(old_nn, file = "nn.data")
+}
 
