@@ -9,14 +9,14 @@ neural_network = function(train, test, s_weights) {
   
   ###Neural Network###
   n <- names(train)
-  learning_vars = n[!n %in% c("like", "dislike")]
+  learning_vars = n[!n %in% c("like")]
   string_learning = paste(learning_vars, collapse = " + ")
-  formel = paste("like + dislike ~", string_learning)
+  formel = paste("like ~", string_learning)
   f <- as.formula(formel)
   
   good = c(15, 10, 10, 2)
   
-  nn <- neuralnet(f, data=train, hidden=good, stepmax = 1e+08, threshold = 0.1, rep=10, linear.output=FALSE, startweights = s_weights)
+  nn <- neuralnet(f, data=train, hidden=good, threshold = 0.1, rep=50, linear.output=FALSE, startweights = s_weights)
   
   #plot(nn)
   
@@ -35,6 +35,7 @@ neural_network = function(train, test, s_weights) {
 }
 
 scale_data = function(data, qualitative_vars) {
+  
   data_to_scale = data[, !(names(data) %in% qualitative_vars)]
   maxs <- apply(data_to_scale, 2, max) 
   mins <- apply(data_to_scale, 2, min)
@@ -52,7 +53,8 @@ classify = function(data) {
   songs.class <- cbind(data[1:10], class.ind(as.factor(data$key)), class.ind(as.factor(data$time_signature)), class.ind(as.factor(data$mode)),class.ind(as.factor(data$label)))
   keys = c("C", "C_major", "D_minor", "D", "D_major", "E_minor", "E", "E_major", "F_minor", "F", "F_major", "G_minor")
   # Set labels name
-  names(songs.class) <- c(names(data)[1:10], keys, "onefourths", "threefourths", "fourfourths", "fivefourths", "minor", "major", "dislike", "like")
+  songs.class = cbind(songs.class[,1:28], songs.class[,30])
+  names(songs.class) <- c(names(data)[1:10], keys, "onefourths", "threefourths", "fourfourths", "fivefourths", "minor", "major", "like")
   return(songs.class)
 }
 
@@ -79,5 +81,4 @@ save_old_nn = function(old_nn) {
 #answer = neural_network(train, test)
 
 #test.error <- mean(test[c("like", "dislike")] != answer[[1]])
-
 

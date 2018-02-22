@@ -35,5 +35,5 @@ treeAnalysis = function(train, test, f) {
   return(which.min(error))
 }
 
-f = label ~ key + danceability + energy + loudness + mode + speechiness + acousticness + instrumentalness + liveness + valence + time_signature
-i = treeAnalysis(songs.train, songs.test, f)
+#f = label ~ key + danceability + energy + loudness + mode + speechiness + acousticness + instrumentalness + liveness + valence + time_signature
+#i = treeAnalysis(songs.train, songs.test, f)
