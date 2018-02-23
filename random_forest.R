@@ -12,7 +12,6 @@ songs.train = songs[training_indices,]
 songs.test = songs[-training_indices,]
 
 serendipityGrove <- function(train, test, f) {
-  
   B <- 100
   
   rf.fit <- randomForest(f, data = train, ntree = B)
@@ -34,6 +33,3 @@ treeAnalysis = function(train, test, f) {
   varImpPlot(rf.fit)
   return(which.min(error))
 }
-
-#f = label ~ key + danceability + energy + loudness + mode + speechiness + acousticness + instrumentalness + liveness + valence + time_signature
-#i = treeAnalysis(songs.train, songs.test, f)

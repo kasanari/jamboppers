@@ -1,1 +1,0 @@
-load("nn.data")

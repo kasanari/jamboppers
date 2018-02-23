@@ -3,9 +3,9 @@
 source("neuralNetwork.R")
 
 #load("nn_old.data")
-#load("old_weights.data")
+load("old_weights.data")
 
-load("classify_train.data")
+load("train_scaled_classed.data")
 
 songs = final_train
 

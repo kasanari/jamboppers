@@ -1,12 +1,19 @@
-
+##Methods for scaling the data
 
 classify = function(data) {
   # Encode as a one hot vector multilabel data
-  songs.class <- cbind(data[1:10], class.ind(as.factor(data$key)), class.ind(as.factor(data$time_signature)), class.ind(as.factor(data$mode)),class.ind(as.factor(data$label)))
-  keys = c("C", "C_major", "D_minor", "D", "D_major", "E_minor", "E", "E_major", "F_minor", "F", "F_major", "G_minor")
+  songs.class <- cbind(data[1:10], 
+                       class.ind(as.factor(data$key)), 
+                       class.ind(as.factor(data$time_signature)), 
+                       class.ind(as.factor(data$mode)),
+                       class.ind(as.factor(data$label)))
+  keys = c("C", "C_major", "D_minor", "D", 
+           "D_major", "E_minor", "E", "E_major", 
+           "F_minor", "F", "F_major", "G_minor")
   # Set labels name
   songs.class = cbind(songs.class[,1:28], songs.class[,30])
-  names(songs.class) <- c(names(data)[1:10], keys, "onefourths", "threefourths", "fourfourths", "fivefourths", "minor", "major", "like")
+  names(songs.class) <- c(names(data)[1:10], keys, "onefourths", "threefourths", "fourfourths", 
+                          "fivefourths", "minor", "major", "like")
   return(songs.class)
 }
 
@@ -30,20 +37,15 @@ for (var in qualitative_vars) {
   scaled[[var]] = total[[var]]
 }
 
-classify = function(data) {
-  # Encode as a one hot vector multilabel data
-  songs.class <- cbind(data[1:10], class.ind(as.factor(data$key)), class.ind(as.factor(data$time_signature)), class.ind(as.factor(data$mode)),class.ind(as.factor(data$label)))
-  keys = c("C", "C_major", "D_minor", "D", "D_major", "E_minor", "E", "E_major", "F_minor", "F", "F_major", "G_minor")
-  # Set labels name
-  songs.class = cbind(songs.class[,1:28], songs.class[,30])
-  names(songs.class) <- c(names(data)[1:10], keys, "onefourths", "threefourths", "fourfourths", "fivefourths", "minor", "major", "like")
-  return(songs.class)
-}
-
 classified = classify(scaled)
 
 final_train = classified[1:500, ]
 final_classify = classified[501:600, ]
+
+save(final_train, file="train_scaled_classed")
+save(final_train, file="classify_scaled_classed")
+save(scaled[1:500, ], file="train_scaled")
+save(scaled[501:600,], file="classify_scaled")
 
 
 

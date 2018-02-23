@@ -1,8 +1,3 @@
-# importFiles = function(path = ".") { 
-#   songs.train <- read.csv(file.path(path, "training_data.csv"), header=T)
-#   songs.test <- read.csv(file.path(path, "songs_to_classify.csv"), header=T)
-# }
-
 scaleData = function(data) {
   names = names(data)
   data.scaled = data
@@ -29,4 +24,16 @@ write_to_file = function(name, title, predicts){
   txt <- makeWebsiteString(predicts)
   txt = paste(title, txt)
   write(txt, file=name, append = TRUE)
+}
+
+makeWebsiteString = function(sentList){
+  
+  websiteString <- rep(0, times = 1, length.out = length(sentList), each = 1)
+  websiteString[sentList == "like"] <- 1
+  
+  txt = ""
+  for (answer in websiteString) {
+    txt = paste(txt, sprintf("%d", answer), sep = "")
+  }
+  return(txt)
 }

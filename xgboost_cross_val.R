@@ -1,10 +1,26 @@
 #Cross validation algorithm modified from lab code
 
-songs <- read.csv('training_data.csv', header = T)
+#songs <- read.csv('training_data.csv', header = T)
 
-load('train_scaled.data')
+#idk jakob fixar: xdgboost
+xDboost = function (train, test) {
+  library(xgboost)
+  
+  # fit model
+  bst <- xgboost(data = train[,1:28], label = train[, "like"], max.depth = 6, 
+                 eta = 1, nround = 20, subsample = 1, colsample_by_tree= 1, objective = "binary:logistic")
+  # predict
+  pred <- predict(bst, test)
+  
+  
+  xgboosting.test.error <- mean(test[, "like"] != round(pred))
+  return(xgboosting.test.error)
+}
 
-#songs <- train.scaled
+
+load('classify_train.data')
+
+songs <- final_train
 
 N.CV = 5
 
@@ -37,13 +53,11 @@ for (i in 1:N.CV) {
     train <- songs.randomized[-validation.indices, ]
     validate <- songs.randomized[validation.indices, ]
     
-    #Trains an AdaBoost model
-    boosting.fit <- boosting(formula=label~., data=train)
-    #Predicts like/dislike using AdaBoost.
-    boosting.pred <- predict(boosting.fit, newdata=validate)
+    train = data.matrix(train)
+    validate = data.matrix(validate)
     
     ##  test error rates
-    error[i] <- mean(validate$label != boosting.pred$class)
+    error[i] <- xDboost(train, validate)
 }
 
 
