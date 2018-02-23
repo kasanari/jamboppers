@@ -5,7 +5,6 @@ source("log_reg.R")
 source("discriminant.R")
 source("makeWebsiteString.R")
 source("knn_cross_val.R")
-install.packages("randomForest") # Vet inte om det ska finnas n?gra package installs h?r/var? Vet inte om install.packages("rpart") beh?vs ox?? /2Lunch
 source("random_forest.R")
 
 songs.train <- read.csv('training_data.csv', header = T)
@@ -79,6 +78,7 @@ write_to_file(filename,"knn:", knn.pred)
 
 ## This because of the/a bug in randomForest; other methods trying to assimilate levels didn't work.
 # levels(songs.classify$label) <- levels(songs.train$label) # Tried fixing randomForest bug, didn't work. Looked into another method, didn't work either.
+# This however, works:
 songs.classify <- rbind(songs.train[1, ] , songs.classify)
 songs.classify <- songs.classify[-1,]
 # Maybe nicer to put them together permanently instead. But believe still nicer but more knowledgable solution exist.
